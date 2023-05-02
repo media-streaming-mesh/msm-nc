@@ -17,7 +17,7 @@
 package main
 
 import (
-	"github.com/media-streaming-mesh/msm-cp/internal/core"
+	"github.com/media-streaming-mesh/msm-nc/internal/core"
 )
 
 func main() {

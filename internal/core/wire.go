@@ -21,8 +21,7 @@ package core
 
 import (
 	"github.com/google/wire"
-	"github.com/media-streaming-mesh/msm-cp/internal/config"
-	"github.com/media-streaming-mesh/msm-cp/internal/rtm"
+	"github.com/media-streaming-mesh/msm-nc/internal/config"
 )
 
 func InitApp() (*App, error) {

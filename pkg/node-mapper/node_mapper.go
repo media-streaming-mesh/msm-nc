@@ -9,7 +9,7 @@ import (
 
 	"github.com/sirupsen/logrus"
 
-	"github.com/media-streaming-mesh/msm-cp/internal/config"
+	"github.com/media-streaming-mesh/msm-nc/internal/config"
 
 	v12 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"

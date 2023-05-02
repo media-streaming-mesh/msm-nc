@@ -11,7 +11,6 @@ RUN go mod download
 
 # Copy the go source
 COPY cmd/ cmd/
-COPY api/ api/
 COPY internal/ internal/
 COPY pkg/ pkg/
 
@@ -20,14 +19,14 @@ ARG TARGETOS TARGETARCH
 # Build
 RUN --mount=type=cache,target=/root/.cache/go-build \
         --mount=type=cache,target=/go/pkg \
-        GOOS=$TARGETOS GOARCH=$TARGETARCH go build -a -o msm-controller cmd/msm-cp/main.go
+        GOOS=$TARGETOS GOARCH=$TARGETARCH go build -a -o msm-network-controller cmd/msm-nc/main.go
 
 # Use distroless as minimal base image to package the manager binary
 # Refer to https://github.com/GoogleContainerTools/distroless for more details
 #FROM gcr.io/distroless/static:nonroot
 FROM ubuntu
 WORKDIR /
-COPY --from=builder /workspace/msm-controller .
+COPY --from=builder /workspace/msm-network-controller .
 #USER nonroot:nonroot
 
-ENTRYPOINT ["/msm-controller", "-grpcPort", "9000", "-loglevel", "5"]
+ENTRYPOINT ["/msm-network-controller", "-loglevel", "5"]

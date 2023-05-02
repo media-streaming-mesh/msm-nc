@@ -3,15 +3,13 @@ package stream_mapper
 import (
 	"errors"
 	"fmt"
-	"sync"
-
-	"github.com/sirupsen/logrus"
-
 	pb_dp "github.com/media-streaming-mesh/msm-cp/api/v1alpha1/msm_dp"
-	"github.com/media-streaming-mesh/msm-cp/internal/model"
-	"github.com/media-streaming-mesh/msm-cp/internal/transport"
-	node_mapper "github.com/media-streaming-mesh/msm-cp/pkg/node-mapper"
+	"github.com/media-streaming-mesh/msm-cp/pkg/model"
 	"github.com/media-streaming-mesh/msm-cp/pkg/stream_api"
+	"github.com/media-streaming-mesh/msm-cp/pkg/transport"
+	node_mapper "github.com/media-streaming-mesh/msm-nc/pkg/node-mapper"
+	"github.com/sirupsen/logrus"
+	"sync"
 )
 
 var streamId StreamId
@@ -49,6 +47,9 @@ func (m *StreamMapper) logError(format string, args ...interface{}) {
 func (m *StreamMapper) WatchStream() {
 	//TODO: process previous cached streams
 	m.streamAPI.GetStreams()
+
+	//TODO: remove test code
+	//m.streamAPI.DeleteStreams()
 
 	m.waitForData()
 	m.streamAPI.WatchStreams(m.dataChan)
