@@ -6,8 +6,9 @@
 package core
 
 import (
-	"github.com/media-streaming-mesh/msm-nc/internal/config"
-	node_mapper "github.com/media-streaming-mesh/msm-nc/pkg/node-mapper"
+	"github.com/media-streaming-mesh/msm-cp/pkg/config"
+	"github.com/media-streaming-mesh/msm-cp/pkg/model"
+	node_mapper "github.com/media-streaming-mesh/msm-cp/pkg/node-mapper"
 	stream_mapper "github.com/media-streaming-mesh/msm-nc/pkg/stream-mapper"
 	"sync"
 )
@@ -23,6 +24,7 @@ func InitApp() (*App, error) {
 		cfg:     cfg,
 		nodeMapper: nodeMapper,
 		streamMapper: streamMapper,
+		nodeChan: make(chan model.Node, 1),
 	}
 	return app, nil
 }

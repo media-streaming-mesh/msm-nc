@@ -27,7 +27,7 @@ require (
 	github.com/google/gofuzz v1.1.0 // indirect
 	github.com/googleapis/gnostic v0.5.5 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/media-streaming-mesh/msm-cp v0.0.0-20230501233902-3cf39a182894 // indirect
+	github.com/media-streaming-mesh/msm-cp v0.0.0-20230512021118-c7b8e9ec2202 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect

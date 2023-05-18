@@ -5,9 +5,9 @@ import (
 	"fmt"
 	pb_dp "github.com/media-streaming-mesh/msm-cp/api/v1alpha1/msm_dp"
 	"github.com/media-streaming-mesh/msm-cp/pkg/model"
+	node_mapper "github.com/media-streaming-mesh/msm-cp/pkg/node-mapper"
 	"github.com/media-streaming-mesh/msm-cp/pkg/stream_api"
 	"github.com/media-streaming-mesh/msm-cp/pkg/transport"
-	node_mapper "github.com/media-streaming-mesh/msm-nc/pkg/node-mapper"
 	"github.com/sirupsen/logrus"
 	"sync"
 )
@@ -22,17 +22,19 @@ type StreamId struct {
 
 type StreamMapper struct {
 	logger    *logrus.Logger
-	dataChan  chan model.StreamData
+	dpClients map[string]transport.Client
 	streamMap *sync.Map
 	streamAPI *stream_api.StreamAPI
+	dataChan  chan model.StreamData
 }
 
 func NewStreamMapper(logger *logrus.Logger, streamMap *sync.Map) *StreamMapper {
 	return &StreamMapper{
 		logger:    logger,
-		dataChan:  make(chan model.StreamData, 1),
+		dpClients: make(map[string]transport.Client),
 		streamMap: streamMap,
 		streamAPI: stream_api.NewStreamAPI(logger),
+		dataChan:  make(chan model.StreamData, 1),
 	}
 }
 
@@ -42,6 +44,25 @@ func (m *StreamMapper) log(format string, args ...interface{}) {
 
 func (m *StreamMapper) logError(format string, args ...interface{}) {
 	m.logger.Errorf("[Stream Mapper] " + fmt.Sprintf(format, args...))
+}
+
+func (m *StreamMapper) ConnectClient(ip string) {
+	grpcClient, err := transport.SetupClient(ip)
+	if err != nil {
+		m.logError("Failed to setup GRPC client, error %s\n", err)
+	}
+	dpClient := transport.Client{
+		m.logger,
+		grpcClient,
+	}
+
+	m.dpClients[ip] = dpClient
+}
+
+func (m *StreamMapper) DisconnectClient(ip string) {
+	dpClient := m.dpClients[ip]
+	dpClient.Close()
+	delete(m.dpClients, ip)
 }
 
 func (m *StreamMapper) WatchStream() {
@@ -97,24 +118,10 @@ func (m *StreamMapper) processStream(data model.StreamData) error {
 	}
 
 	// Create GRPC connection
-	clientGrpcClient, err := transport.SetupClient(clientProxyIP)
-	if err != nil {
-		m.logError("Failed to setup GRPC client, error %s\n", err)
-	}
-	clientDpGrpcClient = transport.Client{
-		m.logger,
-		clientGrpcClient,
-	}
+	clientDpGrpcClient = m.dpClients[clientProxyIP]
 
 	if !isOnSameNode {
-		serverGrpcClient, err := transport.SetupClient(serverProxyIP)
-		if err != nil {
-			m.logError("Failed to setup GRPC client, error %s\n", err)
-		}
-		serverDpGrpcClient = transport.Client{
-			m.logger,
-			serverGrpcClient,
-		}
+		serverDpGrpcClient = m.dpClients[serverProxyIP]
 	}
 
 	// Send data to proxy
@@ -282,11 +289,6 @@ func (m *StreamMapper) processStream(data model.StreamData) error {
 				m.log("GRPC delete stream %v %v", streamData2, result)
 			}
 		}
-	}
-
-	clientDpGrpcClient.Close()
-	if !isOnSameNode {
-		serverDpGrpcClient.Close()
 	}
 	return nil
 }

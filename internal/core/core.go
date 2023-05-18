@@ -17,8 +17,9 @@
 package core
 
 import (
-	"github.com/media-streaming-mesh/msm-nc/internal/config"
-	node_mapper "github.com/media-streaming-mesh/msm-nc/pkg/node-mapper"
+	"github.com/media-streaming-mesh/msm-cp/pkg/config"
+	"github.com/media-streaming-mesh/msm-cp/pkg/model"
+	node_mapper "github.com/media-streaming-mesh/msm-cp/pkg/node-mapper"
 	stream_mapper "github.com/media-streaming-mesh/msm-nc/pkg/stream-mapper"
 )
 
@@ -27,6 +28,7 @@ type App struct {
 	cfg          *config.Cfg
 	nodeMapper   *node_mapper.NodeMapper
 	streamMapper *stream_mapper.StreamMapper
+	nodeChan     chan model.Node
 }
 
 // Start, starts the MSM Network Controller application.
@@ -34,13 +36,26 @@ func (a *App) Start() error {
 	logger := a.cfg.Logger
 	logger.Info("Starting MSM Network Controller")
 
-	//TODO: connect to dp when node mapper find dp
-
+	//Watch for node and connect to node via GRPC
+	a.waitForData()
 	go func() {
-		a.nodeMapper.WatchNode()
+		a.nodeMapper.WatchNode(a.nodeChan)
 	}()
 
+	//Watch for streams and send streamgraph to dp
 	a.streamMapper.WatchStream()
 
 	return nil
+}
+
+func (a *App) waitForData() {
+	go func() {
+		node := <-a.nodeChan
+		if node.State == model.AddNode {
+			a.streamMapper.ConnectClient(node.IP)
+		} else if node.State == model.DeleteNode {
+			a.streamMapper.DisconnectClient(node.IP)
+		}
+		a.waitForData()
+	}()
 }
