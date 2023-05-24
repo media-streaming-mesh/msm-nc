@@ -6,9 +6,10 @@
 package core
 
 import (
-	"github.com/media-streaming-mesh/msm-cp/internal/config"
+	"github.com/media-streaming-mesh/msm-cp/pkg/config"
+	"github.com/media-streaming-mesh/msm-cp/pkg/model"
 	node_mapper "github.com/media-streaming-mesh/msm-cp/pkg/node-mapper"
-	stream_mapper "github.com/media-streaming-mesh/msm-cp/pkg/stream-mapper"
+	stream_mapper "github.com/media-streaming-mesh/msm-nc/pkg/stream-mapper"
 	"sync"
 )
 
@@ -16,23 +17,14 @@ import (
 
 func InitApp() (*App, error) {
 	cfg := config.New()
-	grpcImpl := New(cfg)
-
 	nodeMapper := node_mapper.InitializeNodeMapper(cfg)
-	go func() {
-		nodeMapper.WatchNode()
-	}()
-
 	streamMapper := stream_mapper.NewStreamMapper(cfg.Logger, new(sync.Map))
-	go func() {
-		streamMapper.WatchStream()
-	}()
 
 	app := &App{
 		cfg:     cfg,
-		grpcImpl: grpcImpl,
 		nodeMapper: nodeMapper,
 		streamMapper: streamMapper,
+		nodeChan: make(chan model.Node, 1),
 	}
 	return app, nil
 }
