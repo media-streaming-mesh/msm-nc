@@ -24,5 +24,12 @@ func TestCreateStream(t *testing.T) {
 
 	t.Log("FIXME")
 	stream, result := dpGrpcClient.CreateStream(1, pb_dp.Encap_RTP_UDP, "192.168.82.20", 8050)
-	logger.Debugf("Create stream-mapper %v %v", stream, result)
+	streamDataCopy := &pb_dp.StreamData{
+		Id:        stream.Id,
+		Operation: stream.Operation,
+		Protocol:  stream.Protocol,
+		Endpoint:  stream.Endpoint,
+		Enable:    stream.Enable,
+	}
+	logger.Debugf("Create stream-mapper %v %v", streamDataCopy, result)
 }
