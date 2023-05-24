@@ -1,13 +1,12 @@
 package transport
 
 import (
-	"github.com/media-streaming-mesh/msm-nc/pkg/transport"
+	pb_dp "github.com/media-streaming-mesh/msm-cp/api/v1alpha1/msm_dp"
+	"github.com/media-streaming-mesh/msm-cp/pkg/transport"
 	"testing"
 
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/require"
-
-	pb_dp "github.com/media-streaming-mesh/msm-nc/api/v1alpha1/msm_dp"
 )
 
 func TestCreateStream(t *testing.T) {
@@ -19,8 +18,8 @@ func TestCreateStream(t *testing.T) {
 		logger.Debugf("Failed to connect to server, error %s\n", err)
 	}
 	dpGrpcClient := transport.Client{
-		logger,
-		grpcClient,
+		Log:        logger,
+		GrpcClient: grpcClient,
 	}
 
 	t.Log("FIXME")
