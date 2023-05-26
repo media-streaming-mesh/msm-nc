@@ -1,13 +1,12 @@
 package transport
 
 import (
-	"github.com/media-streaming-mesh/msm-nc/pkg/transport"
+	pb_dp "github.com/media-streaming-mesh/msm-cp/api/v1alpha1/msm_dp"
+	"github.com/media-streaming-mesh/msm-cp/pkg/transport"
 	"testing"
 
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/require"
-
-	pb_dp "github.com/media-streaming-mesh/msm-nc/api/v1alpha1/msm_dp"
 )
 
 func TestCreateStream(t *testing.T) {
@@ -19,11 +18,18 @@ func TestCreateStream(t *testing.T) {
 		logger.Debugf("Failed to connect to server, error %s\n", err)
 	}
 	dpGrpcClient := transport.Client{
-		logger,
-		grpcClient,
+		Log:        logger,
+		GrpcClient: grpcClient,
 	}
 
 	t.Log("FIXME")
 	stream, result := dpGrpcClient.CreateStream(1, pb_dp.Encap_RTP_UDP, "192.168.82.20", 8050)
-	logger.Debugf("Create stream-mapper %v %v", stream, result)
+	streamDataCopy := &pb_dp.StreamData{
+		Id:        stream.Id,
+		Operation: stream.Operation,
+		Protocol:  stream.Protocol,
+		Endpoint:  stream.Endpoint,
+		Enable:    stream.Enable,
+	}
+	logger.Debugf("Create stream-mapper %v %v", streamDataCopy, result)
 }
