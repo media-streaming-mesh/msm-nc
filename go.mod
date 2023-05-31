@@ -3,7 +3,6 @@ module github.com/media-streaming-mesh/msm-nc
 go 1.20
 
 require (
-	github.com/aler9/gortsplib v0.0.0-20220410133005-d479e9ee7dc8
 	github.com/google/wire v0.5.0
 	github.com/media-streaming-mesh/msm-cp v0.0.0-20230512021118-c7b8e9ec2202
 	github.com/sirupsen/logrus v1.9.2
@@ -11,6 +10,7 @@ require (
 )
 
 require (
+	github.com/aler9/gortsplib v0.0.0-20220410133005-d479e9ee7dc8 // indirect
 	github.com/coreos/go-semver v0.3.0 // indirect
 	github.com/coreos/go-systemd/v22 v22.3.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect

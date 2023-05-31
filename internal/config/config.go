@@ -22,7 +22,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/aler9/gortsplib/pkg/base"
 	"github.com/sirupsen/logrus"
 )
 
@@ -34,7 +33,6 @@ type Cfg struct {
 	Remote           string
 	Logger           *logrus.Logger
 	Grpc             *grpcOpts
-	SupportedMethods []base.Method
 }
 
 type grpcOpts struct {
