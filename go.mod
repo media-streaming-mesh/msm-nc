@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/google/wire v0.5.0
 	github.com/media-streaming-mesh/msm-cp v0.0.0-20230512021118-c7b8e9ec2202
-	github.com/sirupsen/logrus v1.9.2
+	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.8.4
 )
 
