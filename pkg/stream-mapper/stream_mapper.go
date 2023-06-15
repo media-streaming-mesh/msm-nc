@@ -7,7 +7,9 @@ import (
 	nodeMapper "github.com/media-streaming-mesh/msm-cp/pkg/node-mapper"
 	"github.com/media-streaming-mesh/msm-cp/pkg/stream_api"
 	"github.com/media-streaming-mesh/msm-cp/pkg/transport"
+	"github.com/media-streaming-mesh/msm-nc/log"
 	"github.com/sirupsen/logrus"
+	"os"
 	"sync"
 )
 
@@ -28,6 +30,9 @@ type StreamMapper struct {
 }
 
 func NewStreamMapper(logger *logrus.Logger, streamMap *sync.Map) *StreamMapper {
+	logger.SetOutput(os.Stdout)
+	log.SetLogLvl(logger)
+	log.SetLogType(logger)
 	return &StreamMapper{
 		logger:    logger,
 		dpClients: make(map[string]transport.Client),
