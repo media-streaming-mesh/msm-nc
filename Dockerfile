@@ -12,6 +12,7 @@ RUN go mod download
 # Copy the go source
 COPY cmd/ cmd/
 COPY internal/ internal/
+COPY log/ log/
 COPY pkg/ pkg/
 
 ARG TARGETOS TARGETARCH
