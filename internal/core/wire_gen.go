@@ -6,7 +6,8 @@
 package core
 
 import (
-	"github.com/media-streaming-mesh/msm-cp/pkg/config"
+	"github.com/media-streaming-mesh/msm-nc/internal/config"
+	config_cp "github.com/media-streaming-mesh/msm-cp/pkg/config"
 	"github.com/media-streaming-mesh/msm-cp/pkg/model"
 	node_mapper "github.com/media-streaming-mesh/msm-cp/pkg/node-mapper"
 	stream_mapper "github.com/media-streaming-mesh/msm-nc/pkg/stream-mapper"
@@ -16,8 +17,9 @@ import (
 // Injectors from wire.go:
 
 func InitApp() (*App, error) {
+	cfg_cp := config_cp.New()
 	cfg := config.New()
-	nodeMapper := node_mapper.InitializeNodeMapper(cfg)
+	nodeMapper := node_mapper.InitializeNodeMapper(cfg_cp)
 	streamMapper := stream_mapper.NewStreamMapper(cfg.Logger, new(sync.Map))
 
 	app := &App{
