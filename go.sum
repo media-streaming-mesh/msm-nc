@@ -101,6 +101,8 @@ github.com/mailru/easyjson v0.7.7 h1:UGYAvKxe3sBsEDzO8ZeWOSlIQfWFlxbzLZe7hwFURr0
 github.com/mailru/easyjson v0.7.7/go.mod h1:xzfreul335JAWq5oZzymOObrkdz5UnU4kGfJJLY9Nlc=
 github.com/media-streaming-mesh/msm-cp v0.0.0-20230612160557-d4a7d27dc5c2 h1:m4Dq6EbycDFNG877e6azhK9Rerzj5R0mCCdA9goqTxs=
 github.com/media-streaming-mesh/msm-cp v0.0.0-20230612160557-d4a7d27dc5c2/go.mod h1:cp9WUar+qrnZvY3ZD1R67pCWBOMfntf0r4uygXsoSxA=
+github.com/media-streaming-mesh/msm-cp v0.0.0-20230615215333-29c9a9a7076e h1:pc/q3Ti/W39HjUa8Oqdd8GJjksraA7+EpRIKXsjWIRI=
+github.com/media-streaming-mesh/msm-cp v0.0.0-20230615215333-29c9a9a7076e/go.mod h1:cp9WUar+qrnZvY3ZD1R67pCWBOMfntf0r4uygXsoSxA=
 github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=
 github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd h1:TRLaZ9cD/w8PVh93nsPXa1VrQ6jlwL5oN8l14QlcNfg=
 github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd/go.mod h1:6dJC0mAP4ikYIbvyc7fijjWJddQyLn8Ig3JB5CqoB9Q=
