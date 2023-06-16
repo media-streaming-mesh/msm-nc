@@ -28,11 +28,8 @@ import (
 // Cfg Config holds the configuration data for the MSM control plane
 // application
 type Cfg struct {
-	DataPlane        string
-	Protocol         string
-	Remote           string
-	Logger           *logrus.Logger
-	Grpc             *grpcOpts
+	Logger *logrus.Logger
+	Grpc   *grpcOpts
 }
 
 type grpcOpts struct {
@@ -45,10 +42,7 @@ func New() *Cfg {
 	cf := new(Cfg)
 	grpcOpt := new(grpcOpts)
 
-	flag.StringVar(&cf.DataPlane, "dataplane", "msm", "dataplane to connect to (msm, vpp)")
-	flag.StringVar(&grpcOpt.Port, "grpcPort", "9000", "port to listen for GRPC on")
-	flag.StringVar(&cf.Protocol, "protocol", "rtsp", "control plane protocol mode (rtsp, rist)")
-
+	flag.StringVar(&grpcOpt.Port, "grpcPort_msm:nc", "9000", "port to listen for GRPC on")
 	flag.Parse()
 
 	cf.Logger = logrus.New()
@@ -57,10 +51,7 @@ func New() *Cfg {
 	setLogType(cf.Logger)
 
 	return &Cfg{
-		DataPlane: cf.DataPlane,
-		Protocol:  cf.Protocol,
-		Logger:    cf.Logger,
-		Remote:    cf.Remote,
+		Logger: cf.Logger,
 		Grpc: &grpcOpts{
 			Port: grpcOpt.Port,
 		},

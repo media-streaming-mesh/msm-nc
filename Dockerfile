@@ -29,4 +29,4 @@ WORKDIR /
 COPY --from=builder /workspace/msm-network-controller .
 #USER nonroot:nonroot
 
-ENTRYPOINT ["/msm-network-controller", "-loglevel", "5"]
+ENTRYPOINT ["/msm-network-controller"]
