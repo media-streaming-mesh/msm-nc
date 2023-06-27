@@ -3,10 +3,10 @@ package stream_mapper
 import (
 	"errors"
 	pbDp "github.com/media-streaming-mesh/msm-cp/api/v1alpha1/msm_dp"
-	"github.com/media-streaming-mesh/msm-cp/pkg/model"
-	nodeMapper "github.com/media-streaming-mesh/msm-cp/pkg/node-mapper"
-	"github.com/media-streaming-mesh/msm-cp/pkg/stream_api"
-	"github.com/media-streaming-mesh/msm-cp/pkg/transport"
+	"github.com/media-streaming-mesh/msm-k8s/pkg/model"
+	nodeMapper "github.com/media-streaming-mesh/msm-k8s/pkg/node_mapper"
+	"github.com/media-streaming-mesh/msm-k8s/pkg/stream_api"
+	"github.com/media-streaming-mesh/msm-k8s/pkg/transport"
 	"github.com/sirupsen/logrus"
 	"sync"
 )
@@ -57,7 +57,7 @@ func (m *StreamMapper) DisconnectClient(ip string) {
 }
 
 func (m *StreamMapper) WatchStream() {
-	//TODO: process previous cached streams
+
 	_, err := m.streamAPI.GetStreams()
 	if err != nil {
 		m.logger.Errorf("unable to get streams %v", err)
