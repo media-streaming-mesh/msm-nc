@@ -1,0 +1,12 @@
+apiVersion: mediastreams.media-streaming-mesh.io/v1
+kind: Streamdata
+metadata:
+  labels:
+    app.kubernetes.io/name: streamdata
+    app.kubernetes.io/instance: streamdata-sample
+    app.kubernetes.io/part-of: msm-nc
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: msm-nc
+  name: streamdata-sample
+spec:
+  # TODO(user): Add fields here

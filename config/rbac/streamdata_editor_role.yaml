@@ -1,0 +1,31 @@
+# permissions for end users to edit streamdata.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: streamdata-editor-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: msm-nc
+    app.kubernetes.io/part-of: msm-nc
+    app.kubernetes.io/managed-by: kustomize
+  name: streamdata-editor-role
+rules:
+- apiGroups:
+  - mediastreams.media-streaming-mesh.io
+  resources:
+  - streamdata
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - mediastreams.media-streaming-mesh.io
+  resources:
+  - streamdata/status
+  verbs:
+  - get

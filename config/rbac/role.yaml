@@ -1,0 +1,33 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  creationTimestamp: null
+  name: manager-role
+rules:
+- apiGroups:
+  - mediastreams.media-streaming-mesh.io
+  resources:
+  - streamdata
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - mediastreams.media-streaming-mesh.io
+  resources:
+  - streamdata/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - mediastreams.media-streaming-mesh.io
+  resources:
+  - streamdata/status
+  verbs:
+  - get
+  - patch
+  - update
