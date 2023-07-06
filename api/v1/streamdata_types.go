@@ -46,11 +46,12 @@ type StreamdataSpec struct {
 
 // StreamdataStatus defines the observed state of Streamdata
 type StreamdataStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	// The current state of this stream
 	// +kubebuilder:validation:Enum=PENDING;SUCCESS;ERROR
 	Status string `json:"status,omitempty"`
+	// If in error the most recent error will be shown
 	Reason string `json:"reason,omitempty"`
+	// The current dataplane status as determined by this module
 	// +kubebuilder:validation:Enum=PENDING;SUCCESS;ERROR
 	StreamStatus string `json:"streamstatus,omitempty"`
 }

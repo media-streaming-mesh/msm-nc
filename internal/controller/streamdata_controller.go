@@ -46,6 +46,7 @@ type StreamdataReconciler struct {
 //+kubebuilder:rbac:groups=mediastreams.media-streaming-mesh.io,resources=streamdata,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=mediastreams.media-streaming-mesh.io,resources=streamdata/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=mediastreams.media-streaming-mesh.io,resources=streamdata/finalizers,verbs=update
+//+kubebuilder:rbac:groups="",resources=nodes,verbs=get;list;watch;
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -61,25 +62,29 @@ func (r *StreamdataReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 
 	stream := &mediastreamsv1.Streamdata{}
 	err := r.Client.Get(ctx, req.NamespacedName, stream)
-	r.Log.Infof("Reconcile req %v", req)
+	r.Log.Infof("Reconcile request %v", req)
+	r.Log.Infof("stream object %v", stream)
 	if err != nil {
 		if k8serrors.IsNotFound(err) {
-			// Object not found, return.  Created objects are automatically garbage collected.
+			// Object not found, return.
+			// Created objects are automatically garbage collected.
 			// For additional cleanup logic use finalizers.
 			return reconcile.Result{}, nil
 		}
 		// Error reading the object - requeue the request.
-		return reconcile.Result{}, err
+		// TODO - decide on requeue vs. ignore
+		return reconcile.Result{Requeue: true}, err
 	}
 	// Write dataplane here
 
 	stream.Status.Status = "SUCCESS"
 	stream.Status.Reason = "NONE"
-	stream.Status.StreamStatus = "Dataplane updated"
+	stream.Status.StreamStatus = "PENDING"
 	updateErr := r.Status().Update(ctx, stream)
 	if updateErr != nil {
+		r.Log.Infof("Error Updating status %s", updateErr)
 		// Error updating the object - requeue the request.
-		return reconcile.Result{}, err
+		return reconcile.Result{Requeue: true}, err
 	}
 
 	return ctrl.Result{}, nil

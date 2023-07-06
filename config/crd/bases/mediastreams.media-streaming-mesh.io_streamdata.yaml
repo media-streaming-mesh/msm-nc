@@ -63,17 +63,17 @@ spec:
             description: StreamdataStatus defines the observed state of Streamdata
             properties:
               reason:
+                description: If in error the most recent error will be shown
                 type: string
               status:
-                description: 'INSERT ADDITIONAL STATUS FIELD - define observed state
-                  of cluster Important: Run "make" to regenerate code after modifying
-                  this file'
+                description: The current state of this stream
                 enum:
                 - PENDING
                 - SUCCESS
                 - ERROR
                 type: string
               streamstatus:
+                description: The current dataplane status as determined by this module
                 enum:
                 - PENDING
                 - SUCCESS
