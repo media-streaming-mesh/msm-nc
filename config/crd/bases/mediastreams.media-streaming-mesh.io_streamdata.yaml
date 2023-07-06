@@ -37,89 +37,43 @@ spec:
             properties:
               clientip:
                 type: string
-              clientports:
-                description: The list of client ports associated with this stream
-                items:
-                  description: Port contains information about a port.
-                  properties:
-                    name:
-                      description: The name of this port. It is optional.  In the
-                        future it may have DNS semantics.
-                      type: string
-                    port:
-                      description: The port that used by the client or server.
-                      format: int32
-                      maximum: 65535
-                      minimum: 0
-                      type: integer
-                    protocol:
-                      default: UDP
-                      description: The IP protocol for this port.
-                      type: string
-                  required:
-                  - port
-                  type: object
-                minItems: 1
-                type: array
-                x-kubernetes-list-map-keys:
-                - port
-                x-kubernetes-list-type: map
+              clientport:
+                description: The port that used by the client
+                maximum: 65535
+                minimum: 0
+                type: integer
               serverip:
                 type: string
-              serverports:
-                description: The list of server ports associated with this stream
-                  TODO confirm omitempty
-                items:
-                  description: Port contains information about a port.
-                  properties:
-                    name:
-                      description: The name of this port. It is optional.  In the
-                        future it may have DNS semantics.
-                      type: string
-                    port:
-                      description: The port that used by the client or server.
-                      format: int32
-                      maximum: 65535
-                      minimum: 0
-                      type: integer
-                    protocol:
-                      default: UDP
-                      description: The IP protocol for this port.
-                      type: string
-                  required:
-                  - port
-                  type: object
-                minItems: 1
-                type: array
-                x-kubernetes-list-map-keys:
-                - port
-                x-kubernetes-list-type: map
-              streamstate:
+              serverport:
+                description: The port that used by the server.
+                maximum: 65535
+                minimum: 0
                 type: integer
-              stubip:
-                description: Foo is an example field of Streamdata. Edit streamdata_types.go
-                  to remove/update
+              streamstate:
+                description: The stream state set my the controlplane
+                enum:
+                - create
+                - play
+                - teardown
                 type: string
-            required:
-            - clientip
-            - serverip
-            - stubip
+              stubip:
+                type: string
             type: object
           status:
             description: StreamdataStatus defines the observed state of Streamdata
             properties:
-              items:
-                additionalProperties:
-                  items:
-                    type: string
-                  type: array
-                type: object
               reason:
                 type: string
               status:
                 description: 'INSERT ADDITIONAL STATUS FIELD - define observed state
                   of cluster Important: Run "make" to regenerate code after modifying
                   this file'
+                enum:
+                - PENDING
+                - SUCCESS
+                - ERROR
+                type: string
+              streamstatus:
                 enum:
                 - PENDING
                 - SUCCESS

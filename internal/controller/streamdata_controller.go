@@ -18,6 +18,11 @@ package controller
 
 import (
 	"context"
+	"fmt"
+	stream_mapper "github.com/media-streaming-mesh/msm-nc/internal/stream-mapper"
+	k8serrors "k8s.io/apimachinery/pkg/api/errors"
+	"sigs.k8s.io/controller-runtime/pkg/reconcile"
+	"strings"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -25,12 +30,17 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	mediastreamsv1 "github.com/media-streaming-mesh/msm-nc/api/v1"
+	"github.com/sirupsen/logrus"
 )
 
 // StreamdataReconciler reconciles a Streamdata object
 type StreamdataReconciler struct {
 	client.Client
-	Scheme *runtime.Scheme
+	Scheme       *runtime.Scheme
+	StreamMapper *stream_mapper.StreamMapper
+	Log          *logrus.Logger
+	// TODO - Do we need a node mapper or node channel - can watch K8s nodes directly
+	// TODO How is config parsed in
 }
 
 //+kubebuilder:rbac:groups=mediastreams.media-streaming-mesh.io,resources=streamdata,verbs=get;list;watch;create;update;patch;delete
@@ -49,7 +59,28 @@ type StreamdataReconciler struct {
 func (r *StreamdataReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = log.FromContext(ctx)
 
-	// TODO(user): your logic here
+	stream := &mediastreamsv1.Streamdata{}
+	err := r.Client.Get(ctx, req.NamespacedName, stream)
+	r.Log.Infof("Reconcile req %v", req)
+	if err != nil {
+		if k8serrors.IsNotFound(err) {
+			// Object not found, return.  Created objects are automatically garbage collected.
+			// For additional cleanup logic use finalizers.
+			return reconcile.Result{}, nil
+		}
+		// Error reading the object - requeue the request.
+		return reconcile.Result{}, err
+	}
+	// Write dataplane here
+
+	stream.Status.Status = "SUCCESS"
+	stream.Status.Reason = "NONE"
+	stream.Status.StreamStatus = "Dataplane updated"
+	updateErr := r.Status().Update(ctx, stream)
+	if updateErr != nil {
+		// Error updating the object - requeue the request.
+		return reconcile.Result{}, err
+	}
 
 	return ctrl.Result{}, nil
 }
@@ -59,4 +90,22 @@ func (r *StreamdataReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&mediastreamsv1.Streamdata{}).
 		Complete(r)
+}
+
+func (r *StreamdataReconciler) setFailedStatus(ctx context.Context, err error, stream *mediastreamsv1.Streamdata) error {
+	stream.Status.Status = "ERROR"
+	stream.Status.Reason = err.Error()
+	updateErr := r.Status().Update(ctx, stream)
+	if updateErr != nil {
+		return concatErrors(updateErr, err)
+	}
+	return err
+}
+
+func concatErrors(errs ...error) error {
+	errList := []string{}
+	for _, v := range errs {
+		errList = append(errList, v.Error())
+	}
+	return fmt.Errorf(strings.Join(errList, ", "))
 }

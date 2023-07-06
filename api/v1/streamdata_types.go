@@ -20,50 +20,28 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // StreamdataSpec defines the desired state of Streamdata
 type StreamdataSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
-	// Foo is an example field of Streamdata. Edit streamdata_types.go to remove/update
-	StubIp   string `json:"stubip"`
-	ServerIp string `json:"serverip"`
-	ClientIp string `json:"clientip"`
-	// The list of server ports associated with this stream
-	// +patchMergeKey=port
-	// +patchStrategy=merge
-	// +listType=map
-	// +listMapKey=port
-	// +kubebuilder:validation:MinItems=1
-	// TODO confirm omitempty
-	ServerPorts []*Port `json:"serverports,omitempty"`
-	// The list of client ports associated with this stream
-	// +patchMergeKey=port
-	// +patchStrategy=merge
-	// +listType=map
-	// +listMapKey=port
-	// +kubebuilder:validation:MinItems=1
-	ClientPorts []*Port `json:"clientports,omitempty"`
-	StreamState int     `json:"streamstate,omitempty"`
-}
-
-// Port contains information about a port.
-type Port struct {
-	// The name of this port. It is optional.  In the future it may
-	// have DNS semantics.
-	// +optional
-	Name string `json:"name,omitempty"`
-	// The IP protocol for this port.
-	// +optional
-	// +kubebuilder:default=UDP
-	Protocol string `json:"protocol,omitempty"`
-	// The port that used by the client or server.
+	// +kubebuilder:validation:Required
+	StubIp string `json:"stubip,omitempty"`
+	// +kubebuilder:validation:Required
+	ServerIp string `json:"serverip,omitempty"`
+	// +kubebuilder:validation:Required
+	ClientIp string `json:"clientip,omitempty"`
+	// The port that used by the server.
 	// +kubebuilder:validation:Maximum=65535
 	// +kubebuilder:validation:Minimum=0
-	Port int32 `json:"port"`
+	// +kubebuilder:validation:Required
+	ServerPort int `json:"serverport,omitempty"`
+	// The port that used by the client
+	// +kubebuilder:validation:Maximum=65535
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Required
+	ClientPort int `json:"clientport,omitempty"`
+	// The stream state set my the controlplane
+	// +kubebuilder:validation:Enum=create;play;teardown
+	// +kubebuilder:validation:Required
+	StreamState string `json:"streamstate,omitempty"`
 }
 
 // StreamdataStatus defines the observed state of Streamdata
@@ -71,9 +49,10 @@ type StreamdataStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 	// +kubebuilder:validation:Enum=PENDING;SUCCESS;ERROR
-	Status string              `json:"status,omitempty"`
-	Reason string              `json:"reason,omitempty"`
-	Items  map[string][]string `json:"items,omitempty"`
+	Status string `json:"status,omitempty"`
+	Reason string `json:"reason,omitempty"`
+	// +kubebuilder:validation:Enum=PENDING;SUCCESS;ERROR
+	StreamStatus string `json:"streamstatus,omitempty"`
 }
 
 //+kubebuilder:object:root=true

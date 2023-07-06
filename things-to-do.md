@@ -5,7 +5,14 @@ TODO - delete this file before final merge to main
 2. Merge the old wire way to start the controller with the new
 kubebuilder scaffolding.  Requires: 
    -  merging cmd/main.go with cmd/msm-ns/main.go
+	- Just delete cmd/msm-ns
    -  merging internal/controller/streamdata_controller.go with internal/core/core.go and internal/core/wire.go
+	- For streammapper add structure to "type StreamdataReconciler struct"
+	- For node mapper the controller can easily watch nodes.  Need to
+	  decide what design we want.  
+		1. msm-nc watch all nodes and take an action on each
+		2. Add a node field to the CRD and let the CP indicate the node
+		3. msm-nc include the node in the status field with a state
 3. helm updates
    -- Update the msm-deployments helm charts.  CRDs - will need to complete 
 before NC can be deployed. maybe cp as well.  
@@ -22,4 +29,8 @@ reconcile loop.
 7. Update .jenkins as needed
 8. Documentation 
 9. Testing ???
+10. Consolidate logging or just use zap logger?
+11. Bring the logging and other default configuration into the manager
+12. Do we care that many things are just called "manager" vs "msm-network-controller".  Changes required in Dockerfile, Makefile and some of the config/manifests
+
 

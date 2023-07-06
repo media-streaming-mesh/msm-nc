@@ -18,7 +18,10 @@ package main
 
 import (
 	"flag"
+	stream_mapper "github.com/media-streaming-mesh/msm-nc/internal/stream-mapper"
+	"github.com/sirupsen/logrus"
 	"os"
+	"sync"
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
@@ -92,6 +95,9 @@ func main() {
 	if err = (&controller.StreamdataReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
+		// TODO fix logger it's not connected to zap logger
+		StreamMapper: stream_mapper.NewStreamMapper(logrus.New(), new(sync.Map)),
+		Log:          logrus.New(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Streamdata")
 		os.Exit(1)
@@ -107,9 +113,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	setupLog.Info("starting manager")
+	setupLog.Info("Starting msm-network-controller")
 	if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {
-		setupLog.Error(err, "problem running manager")
+		setupLog.Error(err, "problem running msm-network-controller")
 		os.Exit(1)
 	}
 }
