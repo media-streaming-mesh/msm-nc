@@ -42,6 +42,9 @@ type StreamdataSpec struct {
 	// +kubebuilder:validation:Enum=create;play;teardown
 	// +kubebuilder:validation:Required
 	StreamState string `json:"streamstate,omitempty"`
+	// The node that the stub is on.  Could be derived
+	// by calling kube API based on other values in CRD
+	NodeID string `json:"nodeid,omitempty"`
 }
 
 // StreamdataStatus defines the observed state of Streamdata

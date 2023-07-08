@@ -10,8 +10,15 @@ kubebuilder scaffolding.  Requires:
 	- For streammapper add structure to "type StreamdataReconciler struct"
 	- For node mapper the controller can easily watch nodes.  Need to
 	  decide what design we want.  
-		1. msm-nc watch all nodes and take an action on each
+		1. msm-nc watch all nodes 
+			- Split reconcillation loop based on type of object
+			in the request.   I haven't found a pattern for this.
+			- If reconcillation is called for either stream data
+			or node change go get the list of nodes and decide what
+			needs to be done.  This is more consistent with other 
+			examples.  E.G. make cluster state.
 		2. Add a node field to the CRD and let the CP indicate the node
+		We choose number 2 as the node for a given stream will never change and the CP can set it in the CRD.
 		3. msm-nc include the node in the status field with a state
 3. helm updates
    -- Update the msm-deployments helm charts.  CRDs - will need to complete 

@@ -16,3 +16,4 @@ spec:
   serverport: 80
   clientport: 8080
   streamstate: play
+  nodeid: cluster1-worker

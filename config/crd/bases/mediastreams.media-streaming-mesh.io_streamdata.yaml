@@ -42,6 +42,10 @@ spec:
                 maximum: 65535
                 minimum: 0
                 type: integer
+              nodeid:
+                description: The node that the stub is on.  Could be derived by calling
+                  kube API based on other values in CRD
+                type: string
               serverip:
                 type: string
               serverport:
