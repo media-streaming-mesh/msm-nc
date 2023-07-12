@@ -18,16 +18,13 @@ package controller
 
 import (
 	"context"
-	"fmt"
 	stream_mapper "github.com/media-streaming-mesh/msm-nc/internal/stream-mapper"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
-	"sigs.k8s.io/controller-runtime/pkg/reconcile"
-	"strings"
-
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
+	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
 	mediastreamsv1 "github.com/media-streaming-mesh/msm-nc/api/v1"
 	"github.com/sirupsen/logrus"
@@ -97,20 +94,20 @@ func (r *StreamdataReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		Complete(r)
 }
 
-func (r *StreamdataReconciler) setFailedStatus(ctx context.Context, err error, stream *mediastreamsv1.Streamdata) error {
-	stream.Status.Status = "ERROR"
-	stream.Status.Reason = err.Error()
-	updateErr := r.Status().Update(ctx, stream)
-	if updateErr != nil {
-		return concatErrors(updateErr, err)
-	}
-	return err
-}
-
-func concatErrors(errs ...error) error {
-	errList := []string{}
-	for _, v := range errs {
-		errList = append(errList, v.Error())
-	}
-	return fmt.Errorf(strings.Join(errList, ", "))
-}
+//func (r *StreamdataReconciler) setFailedStatus(ctx context.Context, err error, stream *mediastreamsv1.Streamdata) error {
+//	stream.Status.Status = "ERROR"
+//	stream.Status.Reason = err.Error()
+//	updateErr := r.Status().Update(ctx, stream)
+//	if updateErr != nil {
+//		return concatErrors(updateErr, err)
+//	}
+//	return err
+//}
+//
+//func concatErrors(errs ...error) error {
+//	errList := []string{}
+//	for _, v := range errs {
+//		errList = append(errList, v.Error())
+//	}
+//	return fmt.Errorf(strings.Join(errList, ", "))
+//}
