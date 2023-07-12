@@ -1,5 +1,6 @@
 # Build the manager binary
-FROM --platform=$BUILDPLATFORM golang:1.20.5 as builder
+FROM golang:1.20.5 as builder
+#TODO confirm with team this can be removed FROM --platform=$BUILDPLATFORM golang:1.20.5 as builder
 
 WORKDIR /workspace
 
@@ -12,20 +13,19 @@ RUN go mod download
 # Copy the go source
 COPY cmd/ cmd/
 COPY internal/ internal/
+COPY api/ api/
 
 ARG TARGETOS TARGETARCH
 
 # Build
-RUN --mount=type=cache,target=/root/.cache/go-build \
-        --mount=type=cache,target=/go/pkg \
-        GOOS=$TARGETOS GOARCH=$TARGETARCH go build -a -o msm-network-controller cmd/msm-nc/main.go
+RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH} go build -a -o manager cmd/main.go
 
 # Use distroless as minimal base image to package the manager binary
 # Refer to https://github.com/GoogleContainerTools/distroless for more details
 #FROM gcr.io/distroless/static:nonroot
 FROM ubuntu
 WORKDIR /
-COPY --from=builder /workspace/msm-network-controller .
+COPY --from=builder /workspace/manager .
 #USER nonroot:nonroot
 
-ENTRYPOINT ["/msm-network-controller"]
+ENTRYPOINT ["/manager"]

@@ -1,0 +1,4 @@
+## Append samples of your project ##
+resources:
+- mediastreams_v1_streamdata.yaml
+#+kubebuilder:scaffold:manifestskustomizesamples
