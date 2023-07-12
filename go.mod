@@ -3,7 +3,6 @@ module github.com/media-streaming-mesh/msm-nc
 go 1.20
 
 require (
-	github.com/google/wire v0.5.0 //TODO should remove
 	github.com/media-streaming-mesh/msm-cp v0.0.0-20230626170322-605f8dc80e16
 	github.com/media-streaming-mesh/msm-k8s v0.0.0-20230627214924-ca28871a9507
 	github.com/onsi/ginkgo/v2 v2.9.5

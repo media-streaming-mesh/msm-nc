@@ -21,6 +21,7 @@ import (
 	stream_mapper "github.com/media-streaming-mesh/msm-nc/internal/stream-mapper"
 	"github.com/sirupsen/logrus"
 	"os"
+	"strings"
 	"sync"
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
@@ -32,7 +33,6 @@ import (
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
-	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
 	mediastreamsv1 "github.com/media-streaming-mesh/msm-nc/api/v1"
 	"github.com/media-streaming-mesh/msm-nc/internal/controller"
@@ -41,7 +41,7 @@ import (
 
 var (
 	scheme   = runtime.NewScheme()
-	setupLog = ctrl.Log.WithName("setup")
+	setupLog = logrus.WithFields(logrus.Fields{"controller": "setup"})
 )
 
 func init() {
@@ -60,13 +60,10 @@ func main() {
 	flag.BoolVar(&enableLeaderElection, "leader-elect", false,
 		"Enable leader election for controller manager. "+
 			"Enabling this will ensure there is only one active controller manager.")
-	opts := zap.Options{
-		Development: true,
-	}
-	opts.BindFlags(flag.CommandLine)
 	flag.Parse()
 
-	ctrl.SetLogger(zap.New(zap.UseFlagOptions(&opts)))
+	// Set up Logrus logger with options from environment variables
+	setupLogrusLogger()
 
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
 		Scheme:                 scheme,
@@ -92,10 +89,12 @@ func main() {
 		os.Exit(1)
 	}
 
+	streamMapperLogger := logrus.StandardLogger()
+	streamMapperLogger.SetLevel(logrus.GetLevel())
+
 	if err = (&controller.StreamdataReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
-		// TODO fix logger it's not connected to zap logger
+		Client:       mgr.GetClient(),
+		Scheme:       mgr.GetScheme(),
 		StreamMapper: stream_mapper.NewStreamMapper(logrus.New(), new(sync.Map)),
 		Log:          logrus.New(),
 	}).SetupWithManager(mgr); err != nil {
@@ -118,4 +117,43 @@ func main() {
 		setupLog.Error(err, "problem running msm-network-controller")
 		os.Exit(1)
 	}
+}
+
+func setupLogrusLogger() {
+	// Set Logrus formatter based on LOG_FORMAT environment variable
+	logFormat := strings.ToLower(os.Getenv("LOG_FORMAT"))
+	switch logFormat {
+	case "json":
+		logrus.SetFormatter(&logrus.JSONFormatter{
+			TimestampFormat: "2006-01-02 15:04:05",
+			PrettyPrint:     true,
+		})
+	default:
+		logrus.SetFormatter(&logrus.TextFormatter{
+			ForceColors:     true,
+			DisableColors:   false,
+			FullTimestamp:   true,
+			TimestampFormat: "01-02-2006 15:04:05",
+		})
+	}
+
+	// Set Logrus log level based on LOG_LEVEL environment variable
+	logLevel := strings.ToLower(os.Getenv("LOG_LEVEL"))
+	switch logLevel {
+	case "trace":
+		logrus.SetLevel(logrus.TraceLevel)
+	case "debug":
+		logrus.SetLevel(logrus.DebugLevel)
+	case "info":
+		logrus.SetLevel(logrus.InfoLevel)
+	case "warn":
+		logrus.SetLevel(logrus.WarnLevel)
+	case "error":
+		logrus.SetLevel(logrus.ErrorLevel)
+	default:
+		logrus.SetLevel(logrus.DebugLevel)
+	}
+
+	// Output log to stdout
+	logrus.SetOutput(os.Stdout)
 }
