@@ -58,10 +58,10 @@ func (m *StreamMapper) DisconnectClient(ip string) {
 
 func (m *StreamMapper) WatchStream() {
 
-	_, err := m.streamAPI.GetStreams()
-	if err != nil {
-		m.logger.Errorf("unable to get streams %v", err)
-	}
+	//_, err := m.streamAPI.GetStreams()
+	//if err != nil {
+	//	m.logger.Errorf("unable to get streams %v", err)
+	//}
 
 	//TODO: remove test code
 	//m.streamAPI.DeleteStreams()
