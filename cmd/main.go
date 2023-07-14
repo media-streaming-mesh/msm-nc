@@ -18,12 +18,9 @@ package main
 
 import (
 	"flag"
-	stream_mapper "github.com/media-streaming-mesh/msm-nc/internal/stream-mapper"
 	"github.com/sirupsen/logrus"
 	"os"
 	"strings"
-	"sync"
-
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	// to ensure that exec-entrypoint and run can make use of them.
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
@@ -89,15 +86,13 @@ func main() {
 		os.Exit(1)
 	}
 
-	streamMapperLogger := logrus.StandardLogger()
-	streamMapperLogger.SetLevel(logrus.GetLevel())
+	log := logrus.StandardLogger()
+	log.SetLevel(logrus.GetLevel())
 
-	if err = (&controller.StreamdataReconciler{
-		Client:       mgr.GetClient(),
-		Scheme:       mgr.GetScheme(),
-		StreamMapper: stream_mapper.NewStreamMapper(logrus.New(), new(sync.Map)),
-		Log:          logrus.New(),
-	}).SetupWithManager(mgr); err != nil {
+	streamdataReconciler := controller.NewStreamdataReconciler(mgr.GetClient(), mgr.GetScheme(), log)
+	streamdataReconciler.ConnectToProxy()
+
+	if err = streamdataReconciler.SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Streamdata")
 		os.Exit(1)
 	}

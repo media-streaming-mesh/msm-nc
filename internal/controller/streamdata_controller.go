@@ -18,6 +18,8 @@ package controller
 
 import (
 	"context"
+	"github.com/media-streaming-mesh/msm-k8s/pkg/model"
+	"github.com/media-streaming-mesh/msm-k8s/pkg/node_mapper"
 	stream_mapper "github.com/media-streaming-mesh/msm-nc/internal/stream-mapper"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -25,6 +27,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
+	"sync"
 
 	mediastreamsv1 "github.com/media-streaming-mesh/msm-nc/api/v1"
 	"github.com/sirupsen/logrus"
@@ -35,9 +38,26 @@ type StreamdataReconciler struct {
 	client.Client
 	Scheme       *runtime.Scheme
 	StreamMapper *stream_mapper.StreamMapper
+	NodeMapper   *node_mapper.NodeMapper
 	Log          *logrus.Logger
+	nodeChan     chan model.Node
+
 	// TODO - Do we need a node mapper or node channel - can watch K8s nodes directly
 	// TODO How is config parsed in
+}
+
+func NewStreamdataReconciler(crdClient client.Client, crdScheme *runtime.Scheme, log *logrus.Logger) *StreamdataReconciler {
+	streamMapper := stream_mapper.NewStreamMapper(log, new(sync.Map))
+	nodeMapper := node_mapper.InitializeNodeMapper(log)
+
+	return &StreamdataReconciler{
+		Client:       crdClient,
+		Scheme:       crdScheme,
+		StreamMapper: streamMapper,
+		NodeMapper:   nodeMapper,
+		Log:          log,
+		nodeChan:     make(chan model.Node, 1),
+	}
 }
 
 //+kubebuilder:rbac:groups=mediastreams.media-streaming-mesh.io,resources=streamdata,verbs=get;list;watch;create;update;patch;delete
@@ -73,7 +93,9 @@ func (r *StreamdataReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 		return reconcile.Result{Requeue: true}, err
 	}
 	// Write dataplane here
+	r.StreamMapper.ProcessCRDStream(stream)
 
+	//Update CRD status
 	stream.Status.Status = "SUCCESS"
 	stream.Status.Reason = "NONE"
 	stream.Status.StreamStatus = "PENDING"
@@ -111,3 +133,24 @@ func (r *StreamdataReconciler) SetupWithManager(mgr ctrl.Manager) error {
 //	}
 //	return fmt.Errorf(strings.Join(errList, ", "))
 //}
+
+// TODO: watch K8s nodes directly
+func (r *StreamdataReconciler) ConnectToProxy() {
+	//Watch for node and connect to node via GRPC
+	r.waitForData()
+	go func() {
+		r.NodeMapper.WatchNode(r.nodeChan)
+	}()
+}
+
+func (r *StreamdataReconciler) waitForData() {
+	go func() {
+		node := <-r.nodeChan
+		if node.State == model.AddNode {
+			r.StreamMapper.ConnectClient(node.IP)
+		} else if node.State == model.DeleteNode {
+			r.StreamMapper.DisconnectClient(node.IP)
+		}
+		r.waitForData()
+	}()
+}

@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/media-streaming-mesh/msm-cp v0.0.0-20230626170322-605f8dc80e16
-	github.com/media-streaming-mesh/msm-k8s v0.0.0-20230627214924-ca28871a9507
+	github.com/media-streaming-mesh/msm-k8s v0.0.0-20230714192442-326751a6ce55
 	github.com/onsi/ginkgo/v2 v2.9.5
 	github.com/onsi/gomega v1.27.7
 	github.com/sirupsen/logrus v1.9.3
