@@ -3,7 +3,6 @@ module github.com/media-streaming-mesh/msm-nc
 go 1.20
 
 require (
-	github.com/google/wire v0.5.0 //TODO should remove
 	github.com/media-streaming-mesh/msm-cp v0.0.0-20230626170322-605f8dc80e16
 	github.com/media-streaming-mesh/msm-k8s v0.0.0-20230627214924-ca28871a9507
 	github.com/onsi/ginkgo/v2 v2.9.5
@@ -26,7 +25,6 @@ require (
 	github.com/evanphx/json-patch/v5 v5.6.0 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/go-logr/logr v1.2.4 // indirect
-	github.com/go-logr/zapr v1.2.4 // indirect
 	github.com/go-openapi/jsonpointer v0.19.6 // indirect
 	github.com/go-openapi/jsonreference v0.20.2 // indirect
 	github.com/go-openapi/swag v0.22.3 // indirect

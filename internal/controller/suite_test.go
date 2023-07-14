@@ -17,20 +17,18 @@ limitations under the License.
 package controller
 
 import (
+	"github.com/sirupsen/logrus"
 	"path/filepath"
 	"testing"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
+	mediastreamsv1 "github.com/media-streaming-mesh/msm-nc/api/v1"
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/envtest"
-	logf "sigs.k8s.io/controller-runtime/pkg/log"
-	"sigs.k8s.io/controller-runtime/pkg/log/zap"
-
-	mediastreamsv1 "github.com/media-streaming-mesh/msm-nc/api/v1"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -48,7 +46,13 @@ func TestControllers(t *testing.T) {
 }
 
 var _ = BeforeSuite(func() {
-	logf.SetLogger(zap.New(zap.WriteTo(GinkgoWriter), zap.UseDevMode(true)))
+	logrus.SetOutput(GinkgoWriter)
+	logrus.SetLevel(logrus.DebugLevel)
+	logrus.SetFormatter(&logrus.TextFormatter{
+		DisableColors:   true,
+		FullTimestamp:   true,
+		TimestampFormat: "2006-01-02 15:04:05",
+	})
 
 	By("bootstrapping test environment")
 	testEnv = &envtest.Environment{
