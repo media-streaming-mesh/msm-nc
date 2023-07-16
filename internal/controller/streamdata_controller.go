@@ -26,7 +26,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
-	mediastreamsv1 "github.com/media-streaming-mesh/msm-nc/api/v1"
+	mediastreamsv1alpha1 "github.com/media-streaming-mesh/msm-nc/api/v1alpha1"
 	"github.com/sirupsen/logrus"
 )
 
@@ -57,7 +57,7 @@ type StreamdataReconciler struct {
 func (r *StreamdataReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	_ = log.FromContext(ctx)
 
-	stream := &mediastreamsv1.Streamdata{}
+	stream := &mediastreamsv1alpha1.Streamdata{}
 	err := r.Client.Get(ctx, req.NamespacedName, stream)
 	r.Log.Infof("Reconcile request %v", req)
 	r.Log.Infof("stream object %v", stream)
@@ -90,11 +90,11 @@ func (r *StreamdataReconciler) Reconcile(ctx context.Context, req ctrl.Request) 
 // SetupWithManager sets up the controller with the Manager.
 func (r *StreamdataReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&mediastreamsv1.Streamdata{}).
+		For(&mediastreamsv1alpha1.Streamdata{}).
 		Complete(r)
 }
 
-//func (r *StreamdataReconciler) setFailedStatus(ctx context.Context, err error, stream *mediastreamsv1.Streamdata) error {
+//func (r *StreamdataReconciler) setFailedStatus(ctx context.Context, err error, stream *mediastreamsv1alpha1.Streamdata) error {
 //	stream.Status.Status = "ERROR"
 //	stream.Status.Reason = err.Error()
 //	updateErr := r.Status().Update(ctx, stream)

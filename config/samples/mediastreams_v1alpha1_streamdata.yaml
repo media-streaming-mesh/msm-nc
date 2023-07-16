@@ -1,4 +1,4 @@
-apiVersion: mediastreams.media-streaming-mesh.io/v1
+apiVersion: mediastreams.media-streaming-mesh.io/v1alpha1
 kind: Streamdata
 metadata:
   labels:
