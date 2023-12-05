@@ -17,7 +17,7 @@ limitations under the License.
 // Package v1 contains API Schema definitions for the mediastreams v1 API group
 // +kubebuilder:object:generate=true
 // +groupName=mediastreams.media-streaming-mesh.io
-package v1
+package v1alpha1
 
 import (
 	"k8s.io/apimachinery/pkg/runtime/schema"

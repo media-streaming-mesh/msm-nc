@@ -34,7 +34,7 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 
-	mediastreamsv1 "github.com/media-streaming-mesh/msm-nc/api/v1"
+	mediastreamsv1alpha1 "github.com/media-streaming-mesh/msm-nc/api/v1alpha1"
 	"github.com/media-streaming-mesh/msm-nc/internal/controller"
 	//+kubebuilder:scaffold:imports
 )
@@ -47,7 +47,7 @@ var (
 func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 
-	utilruntime.Must(mediastreamsv1.AddToScheme(scheme))
+	utilruntime.Must(mediastreamsv1alpha1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
 }
 

@@ -15,6 +15,6 @@ resources:
   domain: media-streaming-mesh.io
   group: mediastreams
   kind: Streamdata
-  path: github.com/media-streaming-mesh/msm-nc/api/v1
-  version: v1
+  path: github.com/media-streaming-mesh/msm-nc/api/v1alpha1
+  version: v1alpha1
 version: "3"
