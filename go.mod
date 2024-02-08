@@ -3,7 +3,7 @@ module github.com/media-streaming-mesh/msm-nc
 go 1.20
 
 require (
-	github.com/google/wire v0.5.0
+	github.com/google/wire v0.6.0
 	github.com/media-streaming-mesh/msm-cp v0.0.0-20230626170322-605f8dc80e16
 	github.com/media-streaming-mesh/msm-k8s v0.0.0-20230627214924-ca28871a9507
 	github.com/sirupsen/logrus v1.9.3
@@ -38,11 +38,11 @@ require (
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.24.0 // indirect
-	golang.org/x/net v0.10.0 // indirect
+	golang.org/x/net v0.20.0 // indirect
 	golang.org/x/oauth2 v0.8.0 // indirect
-	golang.org/x/sys v0.8.0 // indirect
-	golang.org/x/term v0.8.0 // indirect
-	golang.org/x/text v0.9.0 // indirect
+	golang.org/x/sys v0.16.0 // indirect
+	golang.org/x/term v0.16.0 // indirect
+	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20230524185152-1884fd1fac28 // indirect
