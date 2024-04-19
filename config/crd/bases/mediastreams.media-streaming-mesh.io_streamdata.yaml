@@ -1,0 +1,133 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.11.3
+  creationTimestamp: null
+  name: streamdata.mediastreams.media-streaming-mesh.io
+spec:
+  group: mediastreams.media-streaming-mesh.io
+  names:
+    kind: Streamdata
+    listKind: StreamdataList
+    plural: streamdata
+    singular: streamdata
+  scope: Namespaced
+  versions:
+  - name: v1
+    schema:
+      openAPIV3Schema:
+        description: Streamdata is the Schema for the streamdata API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: StreamdataSpec defines the desired state of Streamdata
+            properties:
+              clientip:
+                type: string
+              clientports:
+                description: The list of client ports associated with this stream
+                items:
+                  description: Port contains information about a port.
+                  properties:
+                    name:
+                      description: The name of this port. It is optional.  In the
+                        future it may have DNS semantics.
+                      type: string
+                    port:
+                      description: The port that used by the client or server.
+                      format: int32
+                      maximum: 65535
+                      minimum: 0
+                      type: integer
+                    protocol:
+                      default: UDP
+                      description: The IP protocol for this port.
+                      type: string
+                  required:
+                  - port
+                  type: object
+                minItems: 1
+                type: array
+                x-kubernetes-list-map-keys:
+                - port
+                x-kubernetes-list-type: map
+              serverip:
+                type: string
+              serverports:
+                description: The list of server ports associated with this stream
+                  TODO confirm omitempty
+                items:
+                  description: Port contains information about a port.
+                  properties:
+                    name:
+                      description: The name of this port. It is optional.  In the
+                        future it may have DNS semantics.
+                      type: string
+                    port:
+                      description: The port that used by the client or server.
+                      format: int32
+                      maximum: 65535
+                      minimum: 0
+                      type: integer
+                    protocol:
+                      default: UDP
+                      description: The IP protocol for this port.
+                      type: string
+                  required:
+                  - port
+                  type: object
+                minItems: 1
+                type: array
+                x-kubernetes-list-map-keys:
+                - port
+                x-kubernetes-list-type: map
+              streamstate:
+                type: integer
+              stubip:
+                description: Foo is an example field of Streamdata. Edit streamdata_types.go
+                  to remove/update
+                type: string
+            required:
+            - clientip
+            - serverip
+            - stubip
+            type: object
+          status:
+            description: StreamdataStatus defines the observed state of Streamdata
+            properties:
+              items:
+                additionalProperties:
+                  items:
+                    type: string
+                  type: array
+                type: object
+              reason:
+                type: string
+              status:
+                description: 'INSERT ADDITIONAL STATUS FIELD - define observed state
+                  of cluster Important: Run "make" to regenerate code after modifying
+                  this file'
+                enum:
+                - PENDING
+                - SUCCESS
+                - ERROR
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
