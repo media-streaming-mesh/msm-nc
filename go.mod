@@ -7,7 +7,7 @@ require (
 	github.com/media-streaming-mesh/msm-cp v0.0.0-20230626170322-605f8dc80e16
 	github.com/media-streaming-mesh/msm-k8s v0.0.0-20230627214924-ca28871a9507
 	github.com/sirupsen/logrus v1.9.3
-	github.com/stretchr/testify v1.8.4
+	github.com/stretchr/testify v1.9.0
 )
 
 require (
