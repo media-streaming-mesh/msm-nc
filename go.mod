@@ -1,6 +1,6 @@
 module github.com/media-streaming-mesh/msm-nc
 
-go 1.20
+go 1.22
 
 require (
 	github.com/google/wire v0.6.0
