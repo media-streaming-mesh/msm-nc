@@ -2,7 +2,7 @@ package transport
 
 import (
 	pb_dp "github.com/media-streaming-mesh/msm-cp/api/v1alpha1/msm_dp"
-	"github.com/media-streaming-mesh/msm-cp/pkg/transport"
+	"github.com/media-streaming-mesh/msm-k8s/pkg/transport"
 	"testing"
 
 	"github.com/sirupsen/logrus"
