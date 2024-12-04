@@ -18,9 +18,9 @@ package core
 
 import (
 	"github.com/media-streaming-mesh/msm-k8s/pkg/model"
-	node_mapper "github.com/media-streaming-mesh/msm-k8s/pkg/node_mapper"
+	"github.com/media-streaming-mesh/msm-k8s/pkg/node_mapper"
 	"github.com/media-streaming-mesh/msm-nc/internal/config"
-	"github.com/media-streaming-mesh/msm-nc/internal/stream-mapper"
+	"github.com/media-streaming-mesh/msm-nc/internal/stream_mapper"
 )
 
 // App contains minimal list of dependencies to be able to start an application.
