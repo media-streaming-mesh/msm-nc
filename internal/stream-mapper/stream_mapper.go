@@ -15,7 +15,7 @@ var streamId StreamId
 
 // StreamId type uint32 auto increment
 type StreamId struct {
-	sync.Mutex
+	mu sync.Mutex
 	id uint32
 }
 
@@ -384,8 +384,8 @@ func (m *StreamMapper) getClientCount(serverEp string) int {
 }
 
 func (si *StreamId) ID() (id uint32) {
-	si.Lock()
-	defer si.Unlock()
+	si.mu.Lock()
+	defer si.mu.Unlock()
 	id = si.id
 	si.id++
 	return
