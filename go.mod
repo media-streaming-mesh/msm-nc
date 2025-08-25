@@ -3,7 +3,7 @@ module github.com/media-streaming-mesh/msm-nc
 go 1.23
 
 require (
-	github.com/google/wire v0.6.0
+	github.com/google/wire v0.7.0
 	github.com/media-streaming-mesh/msm-cp v0.0.0-20240513174607-d3cf06c690ea
 	github.com/media-streaming-mesh/msm-k8s v0.0.0-20240513174318-bceaab5a5a2c
 	github.com/sirupsen/logrus v1.9.3
